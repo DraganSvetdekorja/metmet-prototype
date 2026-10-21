@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, useParams } from 'react-router-dom';
+import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import FeaturedServices from './components/FeaturedServices';
@@ -8,6 +8,11 @@ import ProductGrid from './components/ProductGrid';
 import ProductDetail from './components/ProductDetail';
 import BrandLogos from './components/BrandLogos';
 import Footer from './components/Footer';
+import AdminLayout from './admin/AdminLayout';
+import Dashboard from './admin/pages/Dashboard';
+import ProductManagement from './admin/pages/ProductManagement';
+import CategoryManagement from './admin/pages/CategoryManagement';
+import ImportProducts from './admin/pages/ImportProducts';
 import { categories, products } from './data/mockData';
 
 function HomePage({ onCategoryClick, onProductClick, onAddToInquiry }) {
@@ -110,9 +115,31 @@ function ProductPage({ onAddToInquiry }) {
   );
 }
 
+function PublicLayout({ children, cartCount, onCategoryClick }) {
+  const navigate = useNavigate();
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Header
+        cartCount={cartCount}
+        onLogoClick={() => navigate('/')}
+        categories={categories}
+        onCategoryClick={onCategoryClick}
+      />
+      <main className="flex-grow">
+        {children}
+      </main>
+      <Footer categories={categories} />
+    </div>
+  );
+}
+
 function App() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [cartCount, setCartCount] = useState(0);
+
+  const isAdminRoute = location.pathname.startsWith('/admin');
 
   const handleCategoryClick = (category) => {
     navigate(`/c/${category.slug}`);
@@ -130,62 +157,68 @@ function App() {
   // Scroll to top on route change
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [navigate]);
+  }, [location.pathname]);
+
+  if (isAdminRoute) {
+    return (
+      <Routes>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="products" element={<ProductManagement />} />
+          <Route path="categories" element={<CategoryManagement />} />
+          <Route path="import" element={<ImportProducts />} />
+          <Route path="settings" element={
+            <div className="text-center py-12">
+              <h2 className="text-2xl font-bold">Settings</h2>
+              <p className="text-slate-600 mt-2">Coming soon...</p>
+            </div>
+          } />
+        </Route>
+      </Routes>
+    );
+  }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header
-        cartCount={cartCount}
-        onLogoClick={() => navigate('/')}
-        categories={categories}
-        onCategoryClick={handleCategoryClick}
-      />
-
-      <main className="flex-grow">
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <HomePage
-                onCategoryClick={handleCategoryClick}
-                onProductClick={handleProductClick}
-                onAddToInquiry={handleAddToInquiry}
-              />
-            }
-          />
-          <Route
-            path="/c/:categorySlug"
-            element={
-              <CategoryPage
-                onProductClick={handleProductClick}
-                onAddToInquiry={handleAddToInquiry}
-              />
-            }
-          />
-          <Route
-            path="/p/:productSku"
-            element={
-              <ProductPage
-                onAddToInquiry={handleAddToInquiry}
-              />
-            }
-          />
-          <Route
-            path="*"
-            element={
-              <div className="py-16 text-center">
-                <h1 className="text-3xl font-bold mb-4">404 - Stran ni najdena</h1>
-                <button onClick={() => navigate('/')} className="btn-primary">
-                  Nazaj na domačo stran
-                </button>
-              </div>
-            }
-          />
-        </Routes>
-      </main>
-
-      <Footer categories={categories} />
-    </div>
+    <PublicLayout cartCount={cartCount} onCategoryClick={handleCategoryClick}>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <HomePage
+              onCategoryClick={handleCategoryClick}
+              onProductClick={handleProductClick}
+              onAddToInquiry={handleAddToInquiry}
+            />
+          }
+        />
+        <Route
+          path="/c/:categorySlug"
+          element={
+            <CategoryPage
+              onProductClick={handleProductClick}
+              onAddToInquiry={handleAddToInquiry}
+            />
+          }
+        />
+        <Route
+          path="/p/:productSku"
+          element={
+            <ProductPage onAddToInquiry={handleAddToInquiry} />
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <div className="py-16 text-center">
+              <h1 className="text-3xl font-bold mb-4">404 - Stran ni najdena</h1>
+              <button onClick={() => navigate('/')} className="btn-primary">
+                Nazaj na domačo stran
+              </button>
+            </div>
+          }
+        />
+      </Routes>
+    </PublicLayout>
   );
 }
 
