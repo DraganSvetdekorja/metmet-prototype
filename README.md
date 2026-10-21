@@ -6,22 +6,29 @@ Modern, professional B2B e-commerce prototype for Me&Met - Slovenia's leading pr
 
 ---
 
-## 📸 Screenshots
+## 📸 Screenshots & Visual Documentation
 
-### Homepage
-![Homepage Hero](https://via.placeholder.com/1200x600/1E3A8A/FFFFFF?text=Homepage+Hero+Section)
-*Modern hero section with gradient background and dual CTAs*
+For detailed visual documentation with annotated screenshots, see **[docs/SCREENSHOTS.md](docs/SCREENSHOTS.md)**
 
-![Featured Categories](https://via.placeholder.com/1200x600/FFFFFF/1E293B?text=Category+Grid+with+Hover+Effects)
-*Category grid with smooth hover animations*
+### Quick Preview
 
-### Category Page (e.g., `/c/vrecke-mosnicki`)
-![Category Products](https://via.placeholder.com/1200x600/F8FAFC/1E293B?text=Product+Grid+with+Filters)
-*Product listing with collapsible filters and grid/list view*
+**Homepage** - [View Live](https://metmet-prototype.vercel.app/)
+- ✅ Hero section with gradient background
+- ✅ Featured services icons (UV Tisk, Vezenje, B2B cene)
+- ✅ Category grid with 8 featured categories
+- ✅ Product carousel with badges
 
-### Product Detail Page (e.g., `/p/06306`)
-![Product Detail](https://via.placeholder.com/1200x600/FFFFFF/1E293B?text=Product+Detail+with+Bulk+Pricing)
-*Detailed product view with B2B bulk pricing tiers and customization options*
+**Category Page** - [/c/tekstil](https://metmet-prototype.vercel.app/c/tekstil)
+- ✅ Filter sidebar (Price, Color, Branding technique)
+- ✅ Grid/List view toggle
+- ✅ Product cards with quick actions
+
+**Product Detail** - [/p/06306](https://metmet-prototype.vercel.app/p/06306)
+- ✅ Image gallery with color variants
+- ✅ **B2B Bulk Pricing Tiers** (50+, 100+, 500+ pieces)
+- ✅ Customization selector (UV Tisk, Vezenje, Sitotisk)
+- ✅ Quantity calculator with live total pricing
+- ✅ Trust badges (Fast delivery, Quality guarantee)
 
 ---
 
