@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate, useParams } from 'react-router-dom';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import FeaturedServices from './components/FeaturedServices';
@@ -9,107 +10,178 @@ import BrandLogos from './components/BrandLogos';
 import Footer from './components/Footer';
 import { categories, products } from './data/mockData';
 
+function HomePage({ onCategoryClick, onProductClick, onAddToInquiry }) {
+  const filteredProducts = products.slice(0, 8);
+
+  return (
+    <>
+      <Hero />
+      <FeaturedServices />
+      <CategoryGrid
+        categories={categories}
+        onCategoryClick={onCategoryClick}
+      />
+      <section className="py-16 bg-white">
+        <div className="container-custom">
+          <h2 className="text-3xl font-bold mb-8 text-center">Izpostavljeni izdelki</h2>
+          <ProductGrid
+            products={filteredProducts}
+            onProductClick={onProductClick}
+            onAddToInquiry={onAddToInquiry}
+          />
+        </div>
+      </section>
+      <BrandLogos />
+    </>
+  );
+}
+
+function CategoryPage({ onProductClick, onAddToInquiry }) {
+  const { categorySlug } = useParams();
+  const navigate = useNavigate();
+
+  const category = categories.find(c => c.slug === categorySlug);
+  const filteredProducts = category
+    ? products.filter(p => p.category === category.slug)
+    : [];
+
+  if (!category) {
+    return (
+      <div className="py-16 text-center">
+        <h1 className="text-3xl font-bold mb-4">Kategorija ni najdena</h1>
+        <button onClick={() => navigate('/')} className="btn-primary">
+          Nazaj na domačo stran
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <section className="py-8 bg-slate-50 min-h-screen">
+      <div className="container-custom">
+        <div className="mb-6">
+          <button
+            onClick={() => navigate('/')}
+            className="text-brand-red hover:text-red-700 flex items-center gap-2 mb-4"
+          >
+            ← Nazaj na domačo stran
+          </button>
+          <h1 className="text-4xl font-bold mb-2">{category.name}</h1>
+          <p className="text-slate-600">
+            {filteredProducts.length} izdelkov
+          </p>
+        </div>
+        <ProductGrid
+          products={filteredProducts}
+          onProductClick={onProductClick}
+          onAddToInquiry={onAddToInquiry}
+          showFilters={true}
+        />
+      </div>
+    </section>
+  );
+}
+
+function ProductPage({ onAddToInquiry }) {
+  const { productSku } = useParams();
+  const navigate = useNavigate();
+
+  const product = products.find(p => p.sku === productSku);
+
+  if (!product) {
+    return (
+      <div className="py-16 text-center">
+        <h1 className="text-3xl font-bold mb-4">Izdelek ni najden</h1>
+        <button onClick={() => navigate('/')} className="btn-primary">
+          Nazaj na domačo stran
+        </button>
+      </div>
+    );
+  }
+
+  const category = categories.find(c => c.slug === product.category);
+
+  return (
+    <ProductDetail
+      product={product}
+      onBack={() => category ? navigate(`/c/${category.slug}`) : navigate('/')}
+      onAddToInquiry={onAddToInquiry}
+    />
+  );
+}
+
 function App() {
-  const [currentView, setCurrentView] = useState('home'); // 'home', 'category', 'product'
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const navigate = useNavigate();
   const [cartCount, setCartCount] = useState(0);
 
   const handleCategoryClick = (category) => {
-    setSelectedCategory(category);
-    setCurrentView('category');
+    navigate(`/c/${category.slug}`);
   };
 
   const handleProductClick = (product) => {
-    setSelectedProduct(product);
-    setCurrentView('product');
-  };
-
-  const handleBackToHome = () => {
-    setCurrentView('home');
-    setSelectedCategory(null);
-    setSelectedProduct(null);
-  };
-
-  const handleBackToCategory = () => {
-    setCurrentView('category');
-    setSelectedProduct(null);
+    navigate(`/p/${product.sku}`);
   };
 
   const handleAddToInquiry = (product) => {
     setCartCount(prev => prev + 1);
-    // In a real app, this would add to a cart state
     alert(`${product.name} dodano v povpraševanje!`);
   };
 
-  const filteredProducts = selectedCategory
-    ? products.filter(p => p.category === selectedCategory.slug)
-    : products.slice(0, 8);
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [navigate]);
 
   return (
     <div className="min-h-screen flex flex-col">
       <Header
         cartCount={cartCount}
-        onLogoClick={handleBackToHome}
+        onLogoClick={() => navigate('/')}
         categories={categories}
         onCategoryClick={handleCategoryClick}
       />
 
       <main className="flex-grow">
-        {currentView === 'home' && (
-          <>
-            <Hero />
-            <FeaturedServices />
-            <CategoryGrid
-              categories={categories}
-              onCategoryClick={handleCategoryClick}
-            />
-            <section className="py-16 bg-white">
-              <div className="container-custom">
-                <h2 className="text-3xl font-bold mb-8 text-center">Izpostavljeni izdelki</h2>
-                <ProductGrid
-                  products={filteredProducts}
-                  onProductClick={handleProductClick}
-                  onAddToInquiry={handleAddToInquiry}
-                />
-              </div>
-            </section>
-            <BrandLogos />
-          </>
-        )}
-
-        {currentView === 'category' && (
-          <section className="py-8 bg-slate-50 min-h-screen">
-            <div className="container-custom">
-              <div className="mb-6">
-                <button
-                  onClick={handleBackToHome}
-                  className="text-brand-red hover:text-red-700 flex items-center gap-2 mb-4"
-                >
-                  ← Nazaj na domačo stran
-                </button>
-                <h1 className="text-4xl font-bold mb-2">{selectedCategory?.name}</h1>
-                <p className="text-slate-600">
-                  {filteredProducts.length} izdelkov
-                </p>
-              </div>
-              <ProductGrid
-                products={filteredProducts}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HomePage
+                onCategoryClick={handleCategoryClick}
                 onProductClick={handleProductClick}
                 onAddToInquiry={handleAddToInquiry}
-                showFilters={true}
               />
-            </div>
-          </section>
-        )}
-
-        {currentView === 'product' && selectedProduct && (
-          <ProductDetail
-            product={selectedProduct}
-            onBack={selectedCategory ? handleBackToCategory : handleBackToHome}
-            onAddToInquiry={handleAddToInquiry}
+            }
           />
-        )}
+          <Route
+            path="/c/:categorySlug"
+            element={
+              <CategoryPage
+                onProductClick={handleProductClick}
+                onAddToInquiry={handleAddToInquiry}
+              />
+            }
+          />
+          <Route
+            path="/p/:productSku"
+            element={
+              <ProductPage
+                onAddToInquiry={handleAddToInquiry}
+              />
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <div className="py-16 text-center">
+                <h1 className="text-3xl font-bold mb-4">404 - Stran ni najdena</h1>
+                <button onClick={() => navigate('/')} className="btn-primary">
+                  Nazaj na domačo stran
+                </button>
+              </div>
+            }
+          />
+        </Routes>
       </main>
 
       <Footer categories={categories} />

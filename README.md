@@ -2,9 +2,50 @@
 
 Modern, professional B2B e-commerce prototype for Me&Met - Slovenia's leading promotional and business gifts supplier.
 
+🚀 **Live Demo**: [https://metmet-prototype.vercel.app/](https://metmet-prototype.vercel.app/)
+
+---
+
+## 📸 Screenshots
+
+### Homepage
+![Homepage Hero](https://via.placeholder.com/1200x600/1E3A8A/FFFFFF?text=Homepage+Hero+Section)
+*Modern hero section with gradient background and dual CTAs*
+
+![Featured Categories](https://via.placeholder.com/1200x600/FFFFFF/1E293B?text=Category+Grid+with+Hover+Effects)
+*Category grid with smooth hover animations*
+
+### Category Page (e.g., `/c/vrecke-mosnicki`)
+![Category Products](https://via.placeholder.com/1200x600/F8FAFC/1E293B?text=Product+Grid+with+Filters)
+*Product listing with collapsible filters and grid/list view*
+
+### Product Detail Page (e.g., `/p/06306`)
+![Product Detail](https://via.placeholder.com/1200x600/FFFFFF/1E293B?text=Product+Detail+with+Bulk+Pricing)
+*Detailed product view with B2B bulk pricing tiers and customization options*
+
+---
+
+## 🌐 URL Routing
+
+The app uses **React Router** for proper URL-based navigation:
+
+| Route | Description | Example |
+|-------|-------------|---------|
+| `/` | Homepage | [metmet-prototype.vercel.app/](https://metmet-prototype.vercel.app/) |
+| `/c/:categorySlug` | Category pages | [/c/vrecke-mosnicki](https://metmet-prototype.vercel.app/c/vrecke-mosnicki) |
+| `/p/:productSku` | Product detail | [/p/06306](https://metmet-prototype.vercel.app/p/06306) |
+
+✅ URLs are shareable  
+✅ Browser back/forward works  
+✅ Refresh on any page works  
+✅ SEO-friendly structure  
+
+---
+
 ## 🚀 Features
 
 - **Modern UI/UX**: Clean, professional interface optimized for B2B workflows
+- **URL-Based Routing**: Shareable links for every category and product
 - **Responsive Design**: Works seamlessly across desktop, tablet, and mobile
 - **Product Catalog**: Dynamic product grid with filtering and search
 - **B2B Features**:

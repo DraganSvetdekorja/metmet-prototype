@@ -1,4 +1,5 @@
 import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Footer = ({ categories }) => {
   const quickLinks = categories.slice(0, 6);
@@ -35,9 +36,9 @@ const Footer = ({ categories }) => {
             <ul className="space-y-2">
               {quickLinks.map((category) => (
                 <li key={category.id}>
-                  <a href="#" className="text-slate-300 hover:text-white transition-colors text-sm">
+                  <Link to={`/c/${category.slug}`} className="text-slate-300 hover:text-white transition-colors text-sm">
                     {category.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
